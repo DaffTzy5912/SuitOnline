@@ -8,6 +8,8 @@
         body {
             text-align: center;
             font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
         }
         img {
             width: 100%;
@@ -16,25 +18,32 @@
             border: 2px solid #333;
             margin: 10px;
         }
-        button {
-            padding: 10px;
-            font-size: 16px;
-            cursor: pointer;
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
     <h1>Hasil Foto</h1>
-    <img id="resultImage" alt="Hasil Foto">
+    <p id="error" class="hidden">Akses ditolak. Anda tidak memiliki izin melihat hasil foto.</p>
+    <img id="resultImage" class="hidden" alt="Hasil Foto">
     <br>
-    <button onclick="window.location.href='index.html'">Kembali</button>
+    <button onclick="logout()">Kembali</button>
 
     <script>
         const savedImage = localStorage.getItem('capturedImage');
-        if (savedImage) {
+        const authToken = localStorage.getItem('authToken');
+
+        if (savedImage && authToken === 'secure123') {
             document.getElementById('resultImage').src = savedImage;
+            document.getElementById('resultImage').classList.remove('hidden');
         } else {
-            alert('Tidak ada foto yang tersedia.');
+            document.getElementById('error').classList.remove('hidden');
+        }
+
+        function logout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('capturedImage');
             window.location.href = 'index.html';
         }
     </script>
