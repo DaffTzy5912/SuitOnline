@@ -17,32 +17,53 @@
             border-radius: 10px;
             border: 2px solid #333;
             margin: 10px;
-        }
-        .hidden {
             display: none;
+        }
+        #passwordInput {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
     <h1>Hasil Foto</h1>
-    <p id="error" class="hidden">Akses ditolak. Anda tidak memiliki izin melihat hasil foto.</p>
-    <img id="resultImage" class="hidden" alt="Hasil Foto">
+    <p>Masukkan kode akses untuk melihat hasil foto:</p>
+    <input type="password" id="passwordInput" placeholder="Masukkan Kode">
+    <button onclick="checkAccess()">Lihat Foto</button>
     <br>
-    <button onclick="logout()">Kembali</button>
+    <p id="error" style="color: red; display: none;">Kode salah!</p>
+    <img id="resultImage" alt="Hasil Foto">
+    <br>
+    <button onclick="logout()">Hapus & Keluar</button>
 
     <script>
         const savedImage = localStorage.getItem('capturedImage');
-        const authToken = localStorage.getItem('authToken');
+        const correctPassword = "rahasia123"; // Ganti dengan kode akses yang hanya Anda tahu
 
-        if (savedImage && authToken === 'secure123') {
-            document.getElementById('resultImage').src = savedImage;
-            document.getElementById('resultImage').classList.remove('hidden');
-        } else {
-            document.getElementById('error').classList.remove('hidden');
+        function checkAccess() {
+            const enteredPassword = document.getElementById('passwordInput').value;
+            if (enteredPassword === correctPassword) {
+                if (savedImage) {
+                    document.getElementById('resultImage').src = savedImage;
+                    document.getElementById('resultImage').style.display = 'block';
+                    document.getElementById('passwordInput').style.display = 'none';
+                    document.querySelector("button").style.display = 'none';
+                } else {
+                    alert('Tidak ada foto tersimpan.');
+                    window.location.href = 'index.html';
+                }
+            } else {
+                document.getElementById('error').style.display = 'block';
+            }
         }
 
         function logout() {
-            localStorage.removeItem('authToken');
             localStorage.removeItem('capturedImage');
             window.location.href = 'index.html';
         }
