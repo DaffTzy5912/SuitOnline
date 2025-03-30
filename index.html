@@ -1,37 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Suit Online</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kamera Capture</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        video, canvas {
+            width: 100%;
+            max-width: 400px;
+            margin: 10px;
+            border-radius: 10px;
+            border: 2px solid #333;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-  <div id="game-container">
-    <h1>Suit Online ✌️✊✋</h1>
+    <h1>Aplikasi Kamera</h1>
+    <video id="video" autoplay></video>
+    <br>
+    <button id="capture">Ambil Foto</button>
+    <br>
+    <canvas id="canvas" style="display: none;"></canvas><script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureButton = document.getElementById('capture');
+    const context = canvas.getContext('2d');
 
-    <!-- Room Creation -->
-    <div id="room-section">
-      <h2>Buat atau Gabung Room</h2>
-      <input type="text" id="room-code" placeholder="Masukkan Kode Room">
-      <button id="join-room">Gabung Room</button>
-      <button id="create-room">Buat Room Baru</button>
-      <p id="room-status"></p>
-    </div>
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(err => {
+            console.error("Akses kamera ditolak", err);
+        });
 
-    <!-- Game Section -->
-    <div id="game-section" style="display: none;">
-      <h2>Pilih Pilihanmu:</h2>
-      <div id="choices">
-        <button class="choice" data-choice="rock">✊ Batu</button>
-        <button class="choice" data-choice="paper">✋ Kertas</button>
-        <button class="choice" data-choice="scissors">✌️ Gunting</button>
-      </div>
-      <p id="result"></p>
-    </div>
-  </div>
+    captureButton.addEventListener('click', () => {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        const imageData = canvas.toDataURL('image/png');
+        localStorage.setItem('capturedImage', imageData);
+        
+        window.location.href = 'result.html';
+    });
+</script>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="script.js"></script>
 </body>
 </html>
